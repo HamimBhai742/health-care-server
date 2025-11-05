@@ -52,8 +52,21 @@ const changePassword = createAsyncFn(
     });
   }
 );
+
+const forgetPassword = createAsyncFn(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const data = await authServices.forgetPassword(req.body.email);
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatusCode.OK,
+      message: 'Password Changed Successfully',
+      data: null,
+    });
+  }
+);
 export const authController = {
   login,
   getNewAccessToken,
-  changePassword
+  changePassword,
+  forgetPassword
 };

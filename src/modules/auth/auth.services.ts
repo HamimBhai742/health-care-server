@@ -7,6 +7,7 @@ import { createNewAccessToken, createUserToken } from '../../utils/create.jwt';
 import { IJWTPayload } from '../../types/interface';
 import { ENV } from '../../config/env';
 import { createJwtToken } from '../../utils/create.token';
+import { sendEmail } from '../../utils/sendEmail';
 const login = async (payload: { email: string; password: string }) => {
   const user = await prisma.user.findUnique({
     where: {
@@ -101,11 +102,20 @@ const forgetPassword = async (email: string) => {
     ENV.RESET_TOKEN_EXPIRE_IN
   );
   const resetUrl = `${ENV.CLIENT_URL}/reset-password?token=${token}&id=${user.id}`;
-  
+  sendEmail({
+    to: user.email,
+    subject: 'Reset Password',
+    templateName: 'forgetPassword',
+    templateData: {
+      name: "Hamim",
+      resetUrl,
+    }
+  })
 };
 
 export const authServices = {
   login,
   getNewAccessToken,
   changePassword,
+  forgetPassword
 };
