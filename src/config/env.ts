@@ -14,4 +14,8 @@ export const ENV = {
   CLIENT_URL: process.env.CLIENT_URL as string,
   STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET as string,
   RESET_TOKEN_EXPIRE_IN: process.env.RESET_TOKEN_EXPIRE_IN as string,
+  SMTP_HOST: process.env.SMTP_HOST as string,
+  SMTP_PORT: Number(process.env.SMTP_PORT),
+  SMTP_USER: process.env.SMTP_USER as string,
+  SMTP_PASS: process.env.SMTP_PASS as string,
 };
