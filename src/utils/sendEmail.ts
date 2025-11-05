@@ -14,6 +14,7 @@ const transporter = nodemail.createTransport({
   },
 });
 
+console.log(transporter)
 export const sendEmail = async ({
   to,
   subject,
@@ -28,7 +29,7 @@ export const sendEmail = async ({
       from: ENV.SMTP_USER,
       to: to,
       subject: subject,
-      html,
+      html: html,
     });
   } catch (error) {
     console.log(error);

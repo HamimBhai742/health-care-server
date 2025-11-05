@@ -59,7 +59,7 @@ const forgetPassword = createAsyncFn(
     sendResponse(res, {
       success: true,
       statusCode: httpStatusCode.OK,
-      message: 'Password Changed Successfully',
+      message: 'Reset Link Sent Successfully',
       data: null,
     });
   }
