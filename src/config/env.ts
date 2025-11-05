@@ -1,0 +1,17 @@
+export const ENV = {
+  PORT: Number(process.env.PORT),
+  NODE_ENV: process.env.NODE_ENV as string,
+  BCRYPT_SALT: Number(process.env.BCRYPT_SALT),
+  CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME as string,
+  CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY as string,
+  CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET as string,
+  JWT_SECRET: process.env.JWT_SECRET as string,
+  JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN as string,
+  REFRESH_TOKEN_EXPIRES_IN: process.env.REFRESH_TOKEN_EXPIRES_IN as string,
+  REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET as string,
+  OPEN_ROUTER_AI_KEY: process.env.OPEN_ROUTER_AI_KEY as string,
+  STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY as string,
+  CLIENT_URL: process.env.CLIENT_URL as string,
+  STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET as string,
+  RESET_TOKEN_EXPIRE_IN: process.env.RESET_TOKEN_EXPIRE_IN as string,
+};
