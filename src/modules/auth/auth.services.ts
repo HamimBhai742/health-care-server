@@ -6,7 +6,7 @@ import bcrypt from 'bcryptjs';
 import { createNewAccessToken, createUserToken } from '../../utils/create.jwt';
 import { IJWTPayload } from '../../types/interface';
 import { ENV } from '../../config/env';
-import { createJwtToken } from '../../utils/create.token';
+import { createJwtToken, verifyJwtToken } from '../../utils/create.token';
 import { sendEmail } from '../../utils/sendEmail';
 const login = async (payload: { email: string; password: string }) => {
   const user = await prisma.user.findUnique({
@@ -107,15 +107,51 @@ const forgetPassword = async (email: string) => {
     subject: 'Reset Password',
     templateName: 'forgetPassword',
     templateData: {
-      name: "Hamim",
+      name: 'Hamim',
       resetUrl,
-    }
-  })
+    },
+  });
+};
+
+const resetPassword = async (
+  token: string,
+  id: string,
+  newPassword: string
+) => {
+  if (!token) {
+    throw new AppError('Token is missing', httpStatusCode.BAD_REQUEST);
+  }
+  const decode = verifyJwtToken(token, ENV.JWT_SECRET);
+
+  if (!decode) {
+    throw new AppError('Token is invalid', httpStatusCode.BAD_REQUEST);
+  }
+
+  const user = await prisma.user.findUnique({
+    where: {
+      email: decode.email,
+    },
+  });
+
+  if (!user || user.id !== id) {
+    throw new AppError('User not found', httpStatusCode.NOT_FOUND);
+  }
+  const hashPass = await bcrypt.hash(newPassword, ENV.BCRYPT_SALT);
+  await prisma.user.update({
+    where: {
+      email: decode.email,
+    },
+    data: {
+      password: hashPass,
+      newChnagePass: false,
+    },
+  });
 };
 
 export const authServices = {
   login,
   getNewAccessToken,
   changePassword,
-  forgetPassword
+  forgetPassword,
+  resetPassword
 };

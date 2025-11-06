@@ -6,11 +6,12 @@ import { Role } from '@prisma/client';
 const router = Router();
 
 router.post('/forget-password', authController.forgetPassword);
+router.patch('/reset-password', authController.resetPassword);
 router.post('/login', authController.login);
 router.post(
   '/refresh-token',
   checkAuth(...Object.values(Role)),
-  
+
   authController.getNewAccessToken
 );
 

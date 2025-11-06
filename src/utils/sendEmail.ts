@@ -14,7 +14,6 @@ const transporter = nodemail.createTransport({
   },
 });
 
-console.log(transporter)
 export const sendEmail = async ({
   to,
   subject,
@@ -23,7 +22,6 @@ export const sendEmail = async ({
 }: ISendEmailOptions) => {
   try {
     const template = path.join(__dirname, `templates/${templateName}.ejs`);
-    console.log(template);
     const html = await ejs.renderFile(template, templateData);
     await transporter.sendMail({
       from: ENV.SMTP_USER,
