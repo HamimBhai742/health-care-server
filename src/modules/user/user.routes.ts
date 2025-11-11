@@ -18,6 +18,8 @@ router.get(
   userController.getAllUsers
 );
 
+router.get('/me', checkAuth(...Object.values(Role)), userController.getMe);
+
 router.post(
   '/create-patient',
   fileUploader.upload.single('file'),

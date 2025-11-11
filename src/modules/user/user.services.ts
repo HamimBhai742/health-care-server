@@ -6,6 +6,9 @@ import { fileUploader } from '../../utils/multer';
 import { pagination } from '../../utils/pagination';
 import { userSearchFileds } from './user.constain';
 import { Prisma } from '@prisma/client';
+import httpStatusCode from 'http-status-codes';
+import { IJWTPayload } from '../../types/interface';
+import { AppError } from '../../error/coustome.error';
 
 const createPatient = async (req: Request) => {
   if (req.file) {
@@ -114,9 +117,41 @@ const getAllUser = async (filters: any, options: any) => {
   };
 };
 
+const getMe = async (payload: IJWTPayload) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      email: payload.email,
+      status: 'ACTIVE',
+
+    },select: {
+      email: true,
+      role: true,
+      doctor: true,
+    }
+  });
+  if (!user) {
+    throw new AppError('User not found', httpStatusCode.NOT_FOUND);
+  }
+
+  // let patientData=[]
+
+  // if()
+  const patient = await prisma.patient.findUnique({
+    where: {
+      email: user.email,
+    },
+  });
+
+  return {
+    ...user,
+    ...patient,
+  };
+};
+
 export const userServices = {
   createPatient,
   createDoctor,
   createAdmin,
   getAllUser,
+  getMe,
 };

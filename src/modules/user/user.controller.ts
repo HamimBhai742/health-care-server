@@ -4,6 +4,7 @@ import { sendResponse } from '../../utils/send.response';
 import httpStatusCode from 'http-status-codes';
 import { userServices } from './user.services';
 import { pickQuery } from '../../utils/pick.query';
+import { IJWTPayload } from '../../types/interface';
 
 const createPatient = createAsyncFn(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -62,9 +63,26 @@ const getAllUsers = createAsyncFn(
   }
 );
 
+const getMe = createAsyncFn(
+  async (
+    req: Request & { user?: IJWTPayload },
+    res: Response,
+    next: NextFunction
+  ) => {
+    const data = await userServices.getMe(req.user as IJWTPayload);
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatusCode.OK,
+      message: 'User Retrived Successfully',
+      data,
+    });
+  }
+);
+
 export const userController = {
   createPatient,
   createDoctor,
   createAdmin,
   getAllUsers,
+  getMe,
 };
