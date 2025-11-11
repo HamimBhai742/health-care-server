@@ -95,6 +95,18 @@ const deleteUser = createAsyncFn(
   }
 );
 
+const updateUserStatus = createAsyncFn(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const data = await userServices.updateUserStatus(req.params.id, req.body);
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatusCode.OK,
+      message: 'User Status Updated Successfully',
+      data,
+    });
+  }
+);
+
 export const userController = {
   createPatient,
   createDoctor,
@@ -102,4 +114,5 @@ export const userController = {
   getAllUsers,
   getMe,
   deleteUser,
+  updateUserStatus,
 };

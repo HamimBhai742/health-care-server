@@ -160,6 +160,18 @@ const deleteUser = async (user: IJWTPayload) => {
   return null;
 };
 
+const updateUserStatus = async (id: string, status: UserStatus) => {
+  await prisma.user.update({
+    where: {
+      id,
+    },
+    data: {
+      status,
+    },
+  });
+  return null;
+};
+
 export const userServices = {
   createPatient,
   createDoctor,
@@ -167,4 +179,5 @@ export const userServices = {
   getAllUser,
   getMe,
   deleteUser,
+  updateUserStatus,
 };
