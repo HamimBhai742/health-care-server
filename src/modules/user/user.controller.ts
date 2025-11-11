@@ -79,10 +79,27 @@ const getMe = createAsyncFn(
   }
 );
 
+const deleteUser = createAsyncFn(
+  async (
+    req: Request & { user?: IJWTPayload },
+    res: Response,
+    next: NextFunction
+  ) => {
+    const data = await userServices.deleteUser(req.user as IJWTPayload);
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatusCode.OK,
+      message: 'User Deleted Successfully',
+      data,
+    });
+  }
+);
+
 export const userController = {
   createPatient,
   createDoctor,
   createAdmin,
   getAllUsers,
   getMe,
+  deleteUser,
 };

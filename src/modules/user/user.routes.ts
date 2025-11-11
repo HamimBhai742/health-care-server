@@ -27,6 +27,8 @@ router.post(
   userController.createPatient
 );
 
+router.patch('/delete', checkAuth(Role.PATIENT), userController.deleteUser);
+
 router.post(
   '/create-doctor',
   fileUploader.upload.single('file'),

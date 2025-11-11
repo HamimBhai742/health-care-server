@@ -5,7 +5,7 @@ import { Request } from 'express';
 import { fileUploader } from '../../utils/multer';
 import { pagination } from '../../utils/pagination';
 import { userSearchFileds } from './user.constain';
-import { Prisma } from '@prisma/client';
+import { Prisma, UserStatus } from '@prisma/client';
 import httpStatusCode from 'http-status-codes';
 import { IJWTPayload } from '../../types/interface';
 import { AppError } from '../../error/coustome.error';
@@ -122,12 +122,12 @@ const getMe = async (payload: IJWTPayload) => {
     where: {
       email: payload.email,
       status: 'ACTIVE',
-
-    },select: {
+    },
+    select: {
       email: true,
       role: true,
       doctor: true,
-    }
+    },
   });
   if (!user) {
     throw new AppError('User not found', httpStatusCode.NOT_FOUND);
@@ -148,10 +148,23 @@ const getMe = async (payload: IJWTPayload) => {
   };
 };
 
+const deleteUser = async (user: IJWTPayload) => {
+  await prisma.user.update({
+    where: {
+      email: user.email,
+    },
+    data: {
+      status: UserStatus.DELETE,
+    },
+  });
+  return null;
+};
+
 export const userServices = {
   createPatient,
   createDoctor,
   createAdmin,
   getAllUser,
   getMe,
+  deleteUser,
 };
