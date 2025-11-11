@@ -148,10 +148,27 @@ const resetPassword = async (
   });
 };
 
+const getMe = async (session: any) => {
+  const accessToken = session.accessToken;
+  const decode = verifyJwtToken(accessToken, ENV.JWT_SECRET);
+  const user = await prisma.user.findUnique({
+    where: {
+      email: decode.email,
+      status: UserStatus.ACTIVE,
+    },
+  });
+  if (!user) {
+    throw new AppError('User not found', httpStatusCode.NOT_FOUND);
+  }
+
+  return user;
+};
+
 export const authServices = {
   login,
   getNewAccessToken,
   changePassword,
   forgetPassword,
-  resetPassword
+  resetPassword,
+  getMe,
 };

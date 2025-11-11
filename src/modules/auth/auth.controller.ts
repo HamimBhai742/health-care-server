@@ -5,6 +5,8 @@ import httpStatusCode from 'http-status-codes';
 import { authServices } from './auth.services';
 import { setCookies } from '../../utils/set.cookies';
 import { IJWTPayload } from '../../types/interface';
+import { logOutFn } from '../../utils/logout';
+
 const login = createAsyncFn(
   async (req: Request, res: Response, next: NextFunction) => {
     const data = await authServices.login(req.body);
@@ -79,11 +81,35 @@ const resetPassword = createAsyncFn(
       data: null,
     });
   }
-)
+);
+
+const logOut = createAsyncFn(
+  async (req: Request, res: Response, next: NextFunction) => {
+    logOutFn(res, req.cookies);
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatusCode.OK,
+      message: 'Logout Successfully',
+      data: null,
+    });
+  }
+);
+
+const getMe = createAsyncFn(async (req: Request, res: Response) => {
+  const data = await authServices.getMe(req.cookies);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatusCode.OK,
+    message: 'User Retrived Successfully',
+    data,
+  });
+});
 export const authController = {
   login,
   getNewAccessToken,
   changePassword,
   forgetPassword,
-  resetPassword
+  resetPassword,
+  logOut,
+  getMe,
 };

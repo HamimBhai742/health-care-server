@@ -5,6 +5,7 @@ import { Role } from '@prisma/client';
 
 const router = Router();
 
+router.get('/me', authController.getMe);
 router.post('/forget-password', authController.forgetPassword);
 router.patch('/reset-password', authController.resetPassword);
 router.post('/login', authController.login);
