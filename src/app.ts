@@ -6,6 +6,8 @@ import { globalErrorHandel } from './middleware/globalErrorHandel';
 import { notFound } from './middleware/notFound';
 import cookieParser from 'cookie-parser';
 import { paymentController } from './modules/payment/payment.controller';
+import cron from 'node-cron';
+import { appoinmentServices } from './modules/appoinment/appoinment.services';
 export const app: Application = express();
 
 app.post(
@@ -25,6 +27,15 @@ app.use(
 );
 
 app.use('/api/v1', router);
+
+cron.schedule('* * * * *', async () => {
+  try {
+    console.log('running a task every minute', new Date());
+    await appoinmentServices.cancelUnpaidAppoinments();
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 app.get('/', (req: Request, res: Response) => {
   res.json({

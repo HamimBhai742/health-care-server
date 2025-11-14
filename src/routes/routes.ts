@@ -9,6 +9,7 @@ import { patientRouter } from '../modules/patient/patient.routes';
 import { appoinmentRouter } from '../modules/appoinment/appoinment.routes';
 import { prescriptionRouter } from '../modules/prescription/prescription.routes';
 import { reviewRouter } from '../modules/review/review.routes';
+import { metaRouter } from '../modules/meta/meta.routes';
 
 export const router = Router();
 
@@ -52,7 +53,11 @@ const routes = [
   {
     path: '/review',
     router: reviewRouter,
-  }
+  },
+  {
+    path: '/meta-data',
+    router: metaRouter,
+  },
 ];
 
 routes.forEach((route) => {
