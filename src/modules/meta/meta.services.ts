@@ -138,6 +138,75 @@ const getDoctorMetadata = async (user: IJWTPayload) => {
   };
 };
 
+const getPatientMetadata = async (user: IJWTPayload) => {
+  const patient = await prisma.patient.findUniqueOrThrow({
+    where: {
+      email: user.email,
+    },
+  });
+
+  const totalAppoinment = await prisma.appointment.count({
+    where: {
+      patientId: patient.id,
+    },
+  });
+
+  const totalPrescription = await prisma.prescription.count({
+    where: {
+      patientId: patient.id,
+    },
+  });
+
+  const totalPayment = await prisma.payment.count({
+    where: {
+      appointment: {
+        patientId: patient.id,
+      },
+    },
+  });
+
+  const totalReview = await prisma.review.count({
+    where: {
+      patientId: patient.id,
+    },
+  });
+
+  const totalCostAppoinment = await prisma.payment.aggregate({
+    _sum: {
+      amount: true,
+    },
+    where: {
+      appointment: {
+        patientId: patient.id,
+      },
+      status: PaymentStatus.PAID,
+    },
+  });
+
+  const appoinmentsStatusCount = await prisma.appointment.groupBy({
+    by: ['status'],
+    _count: {
+      id: true,
+    },
+    where: {
+      patientId: patient.id,
+    },
+  });
+
+  const data = appoinmentsStatusCount.map(({ status, _count }) => ({
+    status,
+    count: _count.id,
+  }));
+
+  return {
+    totalAppoinment,
+    totalPrescription,
+    totalPayment,
+    totalReview,
+    totalCostAppoinment,
+    appoinmentStatusCount: data,
+  };
+};
 export const metaServices = {
   fetchDashboardData,
 };
